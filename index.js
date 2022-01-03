@@ -16,8 +16,13 @@ io.on('connection', (socket) => {
 	msg = fs.readFileSync('./files/file.txt', {encoding: "utf-8"})
 	io.emit('update', {msg:msg, status:true});
 	socket.on('update', msg => {
-		fs.writeFileSync("./files/file.txt", msg)
-		io.emit('update', {msg:msg, status:true});
+		fs.writeFileSync("./files/" + msg.file, msg.msg)
+		io.emit('update', {msg:msg.msg, file: msg.file, status:true});
+	});
+
+	socket.on('filechange', msg => {
+		msg = fs.readFileSync('./files/' + msg, {encoding: "utf-8"})
+	io.emit('update', {msg:msg, status:true});
 	});
 });
 

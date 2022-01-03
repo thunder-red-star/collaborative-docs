@@ -9,6 +9,9 @@
 
 <body>
 	<form id="form" action="">
+		<p>edit file:</p>
+		<input id="filename" autocomplete="off" onchange="filechange()"/>
+		<p>content</p>
 		<textarea id="text" autocomplete="off" onchange="update()" rows="25" cols="100"></textarea>
     </form>
 	<h1 id="status"></h1>
@@ -18,11 +21,13 @@
       var socket = io();
 
       var textbox = document.getElementById('text');
+	  var filename = document.getElementById('filename');
 	  var statu = document.getElementById('status');
+
+	  var filename = "file.txt"
 
       socket.on('update', function(msg) {
 		  if (msg.status == true) {
-			  console.log("ready")
 			statu.innerHTML = "ready"
 		  }
         textbox.value = msg.msg
@@ -30,8 +35,12 @@
 
 	  function update() {
 		  statu.innerHTML = "saving..."
-		  console.log("saving...")
-		  socket.emit('update', text.value)
+		  socket.emit('update', {msg: textbox.value,filename:filename.value})
+	  }
+
+	  function filechange() {
+		  statu.innerHTML = "changing file..."
+		  socket.emit('filechange', filename.value)
 	  }
     </script>
   </body>

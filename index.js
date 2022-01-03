@@ -8,17 +8,18 @@ app.get('', (req, res) => {
 	res.sendFile(__dirname + '/index.html');
 });
 
-filelist = getFiles()
-for (const file in filelist) {
-	app.get('/' + file, (req, res) => {
-	res.sendFile(__dirname + '/files/' +file);
-});
-}
 
 function getFiles() {
 	files = fs.readdirSync("./files")
 	return files
 }
+
+filelist = getFiles()
+filelist.forEach(file => {
+	app.get('/' + file, (req, res) => {
+	res.sendFile(__dirname + '/files/' +file);
+});
+});
 
 io.on('connection', (socket) => {
 	socket.on('connected', msg => {

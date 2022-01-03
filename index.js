@@ -4,7 +4,7 @@ const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
 const fs = require('fs');
 
-app.get('/', (req, res) => {
+app.get('', (req, res) => {
 	res.sendFile(__dirname + '/index.html');
 });
 
@@ -12,17 +12,37 @@ app.get('/file.txt', (req, res) => {
 	res.sendFile(__dirname + '/files/file.txt');
 });
 
+function getFiles() {
+	files = fs.readdirSync("./files")
+	return files
+}
+
 io.on('connection', (socket) => {
-	msg = fs.readFileSync('./files/file.txt', {encoding: "utf-8"})
-	io.emit('update', {msg:msg, status:true});
+	socket.on('connected', msg => {
+		try {
+			doc = fs.readFileSync('./files/' + msg, { encoding: "utf-8" })
+		}
+		catch {
+			doc = ""
+		}
+		io.emit('update', { msg: doc, status: true, filename: msg });
+		io.emit('files', getFiles())
+	});
 	socket.on('update', msg => {
-		fs.writeFileSync("./files/" + msg.file, msg.msg)
-		io.emit('update', {msg:msg.msg, file: msg.file, status:true});
+		fs.writeFileSync("./files/" + msg.filename, msg.msg)
+		io.emit('update', { msg: msg.msg, file: msg.filename, status: true });
+		io.emit('files', getFiles())
 	});
 
 	socket.on('filechange', msg => {
-		msg = fs.readFileSync('./files/' + msg, {encoding: "utf-8"})
-	io.emit('update', {msg:msg, status:true});
+		try {
+			doc = fs.readFileSync('./files/' + msg, { encoding: "utf-8" })
+		}
+		catch {
+			doc = ""
+		}
+		io.emit('update', { msg: doc, status: true, filename: msg });
+		io.emit('files', getFiles())
 	});
 });
 

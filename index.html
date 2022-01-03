@@ -10,27 +10,45 @@
 <body>
 	<form id="form" action="">
 		<p>edit file:</p>
-		<input id="filename" autocomplete="off" onchange="filechange()"/>
+		<input id="filename" autocomplete="off" onchange="filechange()" value="file.txt"/>
 		<p>content</p>
 		<textarea id="text" autocomplete="off" onchange="update()" rows="25" cols="100"></textarea>
     </form>
 	<h1 id="status"></h1>
+	<h3>editable files:</h3>
+	<p id="files"></p>
     <script src="/socket.io/socket.io.js"></script>
-
+	<script>
+		function findGetParameter(parameterName) {
+    var result = undefined,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;}
+	</script>
     <script>
       var socket = io();
 
       var textbox = document.getElementById('text');
 	  var filename = document.getElementById('filename');
 	  var statu = document.getElementById('status');
+	  var files = document.getElementById('files')
+	  var file = findGetParameter("document") || "file.txt"
+			  filename.value = file
 
-	  var filename = "file.txt"
-
+	  socket.emit("connected", file)
       socket.on('update', function(msg) {
 		  if (msg.status == true) {
 			statu.innerHTML = "ready"
 		  }
-        textbox.value = msg.msg
+		  if (msg.filename == filename.value) {
+        	textbox.value = msg.msg
+		  }
       });
 
 	  function update() {
@@ -38,10 +56,25 @@
 		  socket.emit('update', {msg: textbox.value,filename:filename.value})
 	  }
 
+	  socket.on('files', function (msg) {
+		  str = "<ul>"
+		  msg.forEach(file => {
+			  str += "<li>" + file + "</li>"
+		  })
+		  files.innerHTML = str + "</ul>"
+	  });
+
 	  function filechange() {
+		  if (filename.value == null) {
+			  file = "file.txt"
+		  }else{
+			  file = filename.value
+		  }
 		  statu.innerHTML = "changing file..."
-		  socket.emit('filechange', filename.value)
+		  socket.emit('filechange', file)
 	  }
+	// https://stackoverflow.com/questions/5448545/how-to-retrieve-get-parameters-from-javascript
+
     </script>
   </body>
 </html>

@@ -13,7 +13,6 @@ function getFiles() {
 	files = fs.readdirSync("./files")
 	return files
 }
-
 filelist = getFiles()
 filelist.forEach(file => {
 	app.get('/' + file, (req, res) => {
@@ -36,6 +35,12 @@ io.on('connection', (socket) => {
 		fs.writeFileSync("./files/" + msg.filename, msg.msg)
 		io.emit('update', { msg: msg.msg, file: msg.filename, status: true });
 		io.emit('files', getFiles())
+		filelist = getFiles()
+		filelist.forEach(file => {
+			app.get('/' + file, (req, res) => {
+				res.sendFile(__dirname + '/files/' + file);
+			});
+		});
 	});
 
 	socket.on('filechange', msg => {

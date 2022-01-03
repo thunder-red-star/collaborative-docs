@@ -12,7 +12,7 @@
 
 <body>
 	<form id="form" action="">
-		<p>edit file (write filename in here then click outside of box):</p>
+		<p>edit file (write filename in here then click outside of box) (you can create a file this way!):</p>
 		<input id="filename" autocomplete="off" onchange="filechange()" value="file.txt"/>
 		<p>content (write content in here then click outside of box):</p>
 		<textarea id="text" autocomplete="off" onchange="update()" rows="25" cols="100"></textarea>
@@ -62,7 +62,7 @@
 	  socket.on('files', function (msg) {
 		  str = "<ul>"
 		  msg.forEach(file => {
-			  str += "<li>" + file + "</li>"
+			  str += "<li>" + file + " (<a href=" + "https://thunderdocs.thdr.me/?document=" + file + ">open</a>)" + "</li>"
 		  })
 		  files.innerHTML = str + "</ul>"
 	  });

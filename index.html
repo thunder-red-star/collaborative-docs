@@ -11,25 +11,27 @@
 	<form id="form" action="">
 		<textarea id="text" autocomplete="off" onchange="update()" rows="25" cols="100"></textarea>
     </form>
-	<h1 id="status">ready</h1>
+	<h1 id="status"></h1>
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
       var socket = io();
 
       var textbox = document.getElementById('text');
-	  var status = document.getElementById('status');
+	  var statu = document.getElementById('status');
 
       socket.on('update', function(msg) {
-		status.innerHTML = "updating..."
-        textbox.value = msg
-		status.innerHTML = "ready" 
+		  if (msg.status == true) {
+			  console.log("ready")
+			statu.innerHTML = "ready"
+		  }
+        textbox.value = msg.msg
       });
 
 	  function update() {
-		  status.innerHTML = "saving..."
+		  statu.innerHTML = "saving..."
+		  console.log("saving...")
 		  socket.emit('update', text.value)
-		  status.innerHTML = "ready"
 	  }
     </script>
   </body>

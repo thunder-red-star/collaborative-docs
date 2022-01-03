@@ -3,15 +3,18 @@
 
 <head>
 	<title>thunder docs</title>
-	<style>
-	</style>
+	<meta property="og:title" content="thunder docs">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://thunderdocs.thdr.me">
+	<meta property="og:description" content="google docs is overrated, use thunder docs instead">
+	<meta name="theme-color" content="#FFFFFF">
 </head>
 
 <body>
 	<form id="form" action="">
-		<p>edit file:</p>
+		<p>edit file (write filename in here then click outside of box):</p>
 		<input id="filename" autocomplete="off" onchange="filechange()" value="file.txt"/>
-		<p>content</p>
+		<p>content (write content in here then click outside of box):</p>
 		<textarea id="text" autocomplete="off" onchange="update()" rows="25" cols="100"></textarea>
     </form>
 	<h1 id="status"></h1>

@@ -8,9 +8,12 @@ app.get('', (req, res) => {
 	res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/file.txt', (req, res) => {
-	res.sendFile(__dirname + '/files/file.txt');
+filelist = getFiles()
+for (const file in filelist) {
+	app.get('/' + file, (req, res) => {
+	res.sendFile(__dirname + '/files/' +file);
 });
+}
 
 function getFiles() {
 	files = fs.readdirSync("./files")

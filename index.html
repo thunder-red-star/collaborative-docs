@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>thunder docs</title>
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    <form id="form" action="">
+      <textarea id="text" autocomplete="off" onchange="socket.emit('update', text.value)" rows="25" cols="100"></textarea>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      var socket = io();
+
+      var textbox = document.getElementById('text');
+
+      socket.on('update', function(msg) {
+        textbox.value = msg
+      });
+    </script>
+  </body>
+</html>

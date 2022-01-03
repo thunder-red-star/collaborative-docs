@@ -5,11 +5,11 @@ const port = process.env.PORT || 3000;
 const fs = require('fs');
 
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/files/index.html');
+	res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/file.txt', (req, res) => {
-	res.sendFile(__dirname + '/file.txt');
+	res.sendFile(__dirname + '/files/file.txt');
 });
 
 io.on('connection', (socket) => {
